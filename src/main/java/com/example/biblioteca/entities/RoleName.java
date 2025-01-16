@@ -1,5 +1,7 @@
 package com.example.biblioteca.entities;
 
+import com.example.biblioteca.enums.UserRoles;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,6 +27,6 @@ public class RoleName {
   private Long id;
 
   @Enumerated(EnumType.STRING)
-  private String name;
+  private UserRoles name;
 
 }
