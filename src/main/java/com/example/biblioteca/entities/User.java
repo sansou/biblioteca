@@ -32,8 +32,6 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	
-	private String firstName;
-	private String lastName;
 	private String password;
 	
 	@Column(unique = true)
@@ -43,6 +41,6 @@ public class User {
 	@JoinTable(name = "user_roles",
 		joinColumns = @JoinColumn(name = "user_id"),
 		inverseJoinColumns = @JoinColumn(name = "role_id"))
-	private List<RoleName> roles;
+	private List<Role> roles;
   
 }

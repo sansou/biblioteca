@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class RoleName {
+public class Role {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)

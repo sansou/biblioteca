@@ -20,6 +20,7 @@ import com.example.biblioteca.security.userdetails.UserDetailsImpl;
 import java.io.IOException;
 import java.util.Arrays;
 
+@Component
 public class UserAuthenticationFilter extends OncePerRequestFilter {
   @Autowired
   private JwtTokenService jwtTokenService;

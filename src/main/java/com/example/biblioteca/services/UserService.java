@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.example.biblioteca.dtos.CreateUserDto;
 import com.example.biblioteca.dtos.LoginUserDto;
 import com.example.biblioteca.dtos.RecoveryJwtTokenDto;
-import com.example.biblioteca.entities.RoleName;
+import com.example.biblioteca.entities.Role;
 import com.example.biblioteca.entities.User;
 import com.example.biblioteca.repositories.UserRepository;
 import com.example.biblioteca.security.authentication.JwtTokenService;
@@ -59,7 +59,7 @@ public class UserService {
         // Codifica a senha do usuário com o algoritmo bcrypt
         .password(securityConfiguration.passwordEncoder().encode(createUserDto.password()))
         // Atribui ao usuário uma permissão específica
-        .roles(List.of(RoleName.builder().name(createUserDto.role()).build()))
+        .roles(List.of(Role.builder().name(createUserDto.role()).build()))
         .build();
 
     // Salva o novo usuário no banco de dados
