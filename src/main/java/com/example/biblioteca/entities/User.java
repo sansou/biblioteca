@@ -34,6 +34,8 @@ public class User {
 	
 	private String password;
 	
+	private String name;
+	
 	@Column(unique = true)
 	private String email;
 	
