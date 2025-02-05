@@ -1,4 +1,4 @@
-package com.example.biblioteca.dto;
+package com.example.biblioteca.dto.user;
 
 import java.util.List;
 
