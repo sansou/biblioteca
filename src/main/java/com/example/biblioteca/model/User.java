@@ -1,4 +1,4 @@
-package com.example.biblioteca.entities;
+package com.example.biblioteca.model;
 
 import java.util.List;
 

@@ -1,14 +1,14 @@
-package com.example.biblioteca.services;
+package com.example.biblioteca.service;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.biblioteca.dtos.CreateUserDto;
-import com.example.biblioteca.entities.Role;
-import com.example.biblioteca.entities.User;
-import com.example.biblioteca.repositories.UserRepository;
+import com.example.biblioteca.dto.CreateUserDto;
+import com.example.biblioteca.model.Role;
+import com.example.biblioteca.model.User;
+import com.example.biblioteca.repository.UserRepository;
 
 @Service
 public class UserService {
@@ -27,7 +27,7 @@ public class UserService {
   // }
 
   // Método responsável por criar um usuário
-  public User createUser(CreateUserDto createUserDto) {
+  public User createUser(CreateUserDto createUserDto) throws Exception{
 
     // Cria um novo usuário com os dados fornecidos
     User newUser = User.builder()
