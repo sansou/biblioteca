@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.example.biblioteca.dto.user.CreateUserDto;
 import com.example.biblioteca.model.Role;
 import com.example.biblioteca.model.User;
+import com.example.biblioteca.repository.RoleRepository;
 import com.example.biblioteca.repository.UserRepository;
 
 @Service
@@ -15,6 +16,9 @@ public class UserService {
 
   @Autowired
   private UserRepository userRepository;
+  
+  @Autowired
+  private RoleRepository roleRepository;
 
   // Método responsável por autenticar um usuário e retornar um token JWT
   // public RecoveryJwtTokenDto login(LoginUserDto loginUserDto) {
@@ -29,6 +33,9 @@ public class UserService {
   // Método responsável por criar um usuário
   public User createUser(CreateUserDto createUserDto) throws Exception{
 
+    //Verifica se a role existe
+    Role role = roleRepository.findByName(createUserDto.role());
+
     // Cria um novo usuário com os dados fornecidos
     User newUser = User.builder()
         .email(createUserDto.email())
@@ -36,7 +43,7 @@ public class UserService {
         .password(createUserDto.password())
         .name(createUserDto.name())
         // Atribui ao usuário uma permissão específica
-        .roles(List.of(Role.builder().name(createUserDto.role()).build()))
+        .roles( role!= null ? List.of(role) : List.of(Role.builder().name(createUserDto.role()).build()))
         .build();
 
     // Salva o novo usuário no banco de dados
