@@ -2,6 +2,7 @@ package com.example.biblioteca.service;
 
 import java.util.List;
 
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,24 +35,23 @@ public class UserService {
   // }
 
   // Método responsável por criar um usuário
-  public User createUser(CreateUserDto createUserDto)  {
+  public User createUser(CreateUserDto createUserDto) {
     // Verifica se a permissão fornecida existe
     Role role = validateRole(createUserDto.role());
 
     // Cria um novo usuário com os dados fornecidos
     User newUser = User.builder()
-        .email(createUserDto.email())
-        // Codifica a senha do usuário com o algoritmo bcrypt
+        .email(createUserDto.email())// Codifica a senha do usuário com o algoritmo bcrypt
         .password(createUserDto.password())
-        .name(createUserDto.name())
-        // Atribui ao usuário uma permissão específica
+        .name(createUserDto.name())// Atribui ao usuário uma permissão específica
         .roles(role != null ? List.of(role) : List.of(Role.builder().name(createUserDto.role()).build()))
         .build();
 
     // Salva o novo usuário no banco de dados
+
     try {
       userRepository.findByEmail(createUserDto.email()).ifPresent(user -> {
-        throw new RuntimeException("Usuário já cadastrado");
+        throw new RuntimeException();
       });
       return userRepository.save(newUser);
 
@@ -60,18 +60,7 @@ public class UserService {
     }
   }
 
-  private Role validateRole(UserRoles role) {
-    boolean existsRole = false;
-    for (UserRoles uRole : UserRoles.values()) {
-      if (uRole.equals(role)) {
-        existsRole = true;
-        break;
-      }
-    }
-    if (!existsRole) {
-      throw new RuntimeException("Permissão inválida");
-    }
-
+  private Role validateRole(UserRoles role) {   
     Role userRole = null;
     if (roleExists(role)) {
       userRole = roleRepository.findByName(role);

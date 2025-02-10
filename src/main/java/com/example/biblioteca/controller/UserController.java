@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.biblioteca.dto.user.CreateUserDto;
+import com.example.biblioteca.error.ErroResponse;
 import com.example.biblioteca.model.User;
 import com.example.biblioteca.service.UserService;
 
@@ -20,13 +21,13 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-   @PostMapping()
+    @PostMapping()
     public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto) {
         User user = userService.createUser(createUserDto);
         if (user != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body(user);
         } else {
-            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body("Usuário já cadastrado");
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(new ErroResponse("Usuário já cadastrado", 422));
         }
     }
 
