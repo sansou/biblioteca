@@ -3,7 +3,6 @@ package com.example.biblioteca.model;
 import java.util.Date;
 
 import com.example.biblioteca.enums.StatusLivro;
-import com.example.biblioteca.enums.UserRoles;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,7 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "Livro")
 @Table(name = "livros")
 @AllArgsConstructor
 @NoArgsConstructor

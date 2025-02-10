@@ -7,5 +7,6 @@ import com.example.biblioteca.model.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
     Role findByName(UserRoles name);
+    boolean existsByName(UserRoles name);
 
 }

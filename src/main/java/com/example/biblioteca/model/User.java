@@ -2,8 +2,6 @@ package com.example.biblioteca.model;
 
 import java.util.List;
 
-import com.example.biblioteca.enums.UserRoles;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -20,8 +18,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Table(name = "users")
 @Entity(name = "User")
+@Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder

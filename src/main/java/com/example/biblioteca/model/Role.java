@@ -14,11 +14,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity
+@Entity(name = "Role")
 @Table(name = "roles")
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Getter
 public class Role {
 
