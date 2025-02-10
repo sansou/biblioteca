@@ -1,5 +1,7 @@
 package com.example.biblioteca.dto.livro;
 
-public record UpdateLivroDto() {
+import com.example.biblioteca.model.Livro;
+
+public record UpdateLivroDto(Livro livro) {
   
 }

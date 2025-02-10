@@ -4,6 +4,6 @@ import java.util.Date;
 
 import com.example.biblioteca.enums.StatusLivro;
 
-public record CreateLivroDto(String titulo, String autor, String isbn, String categoria, Date anoPublicacao, StatusLivro status) {
+public record CreateLivroDto(String titulo, String autor, String isbn, String categoria, Date anoPublicacao, StatusLivro status, Integer quantidade) {
 
 }

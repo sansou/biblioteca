@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.biblioteca.dto.livro.CreateLivroDto;
+import com.example.biblioteca.dto.livro.UpdateLivroDto;
 import com.example.biblioteca.enums.StatusLivro;
 import com.example.biblioteca.model.Livro;
 import com.example.biblioteca.repository.LivroRepository;
@@ -28,12 +29,20 @@ public class LivroService {
     try {
       return livroRepository.save(newLivro);
     } catch (Exception e) {
-      System.out.println(e.getMessage());
       return null;
     }
   }
 
-  public List<Livro> getLivrosByAutor(String autor) {
+  public List<Livro> getBooksByAuthor(String autor) {
     return livroRepository.findByAutor(autor);
+  }
+
+  public Object updateQtdd(Long id, UpdateLivroDto updateLivroDto) {
+    Livro livro = livroRepository.findById(id).orElseThrow();
+    if (livro == null) {
+      return null;
+    }
+    livro.setQuantidade(updateLivroDto.livro().getQuantidade());
+    return livroRepository.save(livro);
   }
 }

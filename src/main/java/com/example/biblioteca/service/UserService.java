@@ -66,7 +66,6 @@ public class UserService {
       userRole = roleRepository.findByName(role);
     }
     return userRole;
-
   }
 
   private boolean roleExists(UserRoles role) {

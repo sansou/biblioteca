@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity(name = "Livro")
 @Table(name = "livros")
@@ -23,6 +24,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 @Getter
+@Setter
 public class Livro {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -45,4 +47,6 @@ public class Livro {
   @Enumerated(EnumType.STRING)
   private StatusLivro status;
 
+  @Builder.Default
+  private Integer quantidade = 1;
 }
