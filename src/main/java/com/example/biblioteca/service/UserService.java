@@ -1,6 +1,7 @@
 package com.example.biblioteca.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +71,14 @@ public class UserService {
 
   private boolean roleExists(UserRoles role) {
     return roleRepository.existsByName(role) ? true : false;
+  }
+
+  public User findByEmail(String email) {
+    Optional<User> opt = userRepository.findByEmail(email);
+    System.out.println(opt.isPresent());
+    if (!opt.isPresent()) {
+      return null;
+    }
+    return opt.get();
   }
 }

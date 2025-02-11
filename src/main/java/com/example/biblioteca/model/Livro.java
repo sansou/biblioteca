@@ -47,6 +47,4 @@ public class Livro {
   @Enumerated(EnumType.STRING)
   private StatusLivro status;
 
-  @Builder.Default
-  private Integer quantidade = 1;
 }
