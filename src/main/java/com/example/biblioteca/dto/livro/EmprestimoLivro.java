@@ -1,5 +1,7 @@
 package com.example.biblioteca.dto.livro;
 
-public record EmprestimoLivro(String email) {
+import java.util.List;
+
+public record EmprestimoLivro(String email, List<String> isbns) {
 
 }

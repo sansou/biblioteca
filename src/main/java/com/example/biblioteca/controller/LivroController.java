@@ -37,25 +37,25 @@ public class LivroController {
     }
   }
 
-  @PutMapping("/{id}/emprestimo")
-  public ResponseEntity<?> emprestimo(@PathVariable Long id, @RequestBody EmprestimoLivro emprestimoLivro) {
-    Livro livro = livroService.emprestimo(id, emprestimoLivro.email());
-    if (livro != null) {
-      return ResponseEntity.ok(livro);
+  @PutMapping("/emprestimo")
+  public ResponseEntity<?> emprestimo(@RequestBody EmprestimoLivro emprestimoLivro) {
+    List<Livro> livros = livroService.emprestimo(emprestimoLivro);
+    if (livros != null) {
+      return ResponseEntity.ok(livros);
     } else {
-      return ResponseEntity.status(404).body(new ErroResponse("Livro ou Usuário não encontrado", 404));
+      return ResponseEntity.status(404).body(new ErroResponse("Livros ou Usuário não encontrado", 404));
     }
   }
 
-  @PutMapping("/{id}/devolucao")
-  public ResponseEntity<?> devolucao(@PathVariable Long id, @RequestBody String userEmail) {
-    Livro livro = livroService.emprestimo(id, userEmail);
-    if (livro != null) {
-      return ResponseEntity.ok(livro);
-    } else {
-      return ResponseEntity.status(404).body(new ErroResponse("Livro ou Usuário não encontrado", 404));
-    }
-  }
+  // @PutMapping("/{id}/devolucao")
+  // public ResponseEntity<?> devolucao(@PathVariable Long id, @RequestBody String userEmail) {
+  //   Livro livro = livroService.emprestimo(id, userEmail);
+  //   if (livro != null) {
+  //     return ResponseEntity.ok(livro);
+  //   } else {
+  //     return ResponseEntity.status(404).body(new ErroResponse("Livro ou Usuário não encontrado", 404));
+  //   }
+  // }
 
   @GetMapping("/autor/{autor}")
   public ResponseEntity<?> getLivrosByAutor(@PathVariable String autor) {

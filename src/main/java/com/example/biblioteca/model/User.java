@@ -1,6 +1,10 @@
 package com.example.biblioteca.model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -43,4 +47,14 @@ public class User {
 		inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private List<Role> roles;
   
+	@ManyToMany
+	@JoinTable(
+    name = "emprestimo",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "livro_id")
+  )
+
+	@Builder.Default
+	@JsonBackReference
+	private List<Livro> livros = new ArrayList<>();
 }

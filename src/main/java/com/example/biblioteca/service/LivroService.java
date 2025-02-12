@@ -2,12 +2,13 @@ package com.example.biblioteca.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.biblioteca.dto.livro.CreateLivroDto;
-import com.example.biblioteca.dto.livro.UpdateLivroDto;
+import com.example.biblioteca.dto.livro.EmprestimoLivro;
 import com.example.biblioteca.enums.StatusLivro;
 import com.example.biblioteca.model.Livro;
 import com.example.biblioteca.model.User;
@@ -44,32 +45,43 @@ public class LivroService {
   public Boolean deleteLivro(Long id) {
     Livro livro = this.findById(id);
     if (livro == null) {
-      return false;      
+      return false;
     } else {
       livroRepository.delete(livro);
       return true;
     }
   }
 
-  public Livro findById(Long id) {
+  private Livro findById(Long id) {
     Optional<Livro> opt = livroRepository.findById(id);
     if (!opt.isPresent()) {
       return null;
     }
     return opt.get();
+
   }
 
-  public Livro emprestimo(Long id, String userEmail) {
-    Livro livro = this.findById(id);
-    User user = userService.findByEmail(userEmail);
-    System.out.println(userEmail +"/n");
-    System.out.println(livro);
-    System.out.println(user);
-    if (livro == null || user == null) {
+  public List<Livro> emprestimo(EmprestimoLivro emprestimoLivro) {
+    List<Livro> livros = livroRepository.findByIsbns(emprestimoLivro.isbns());
+
+    User user = userService.findByEmail(emprestimoLivro.email());
+    if (livros.isEmpty() || user == null) {
       return null;
     }
-    livro.setStatus(StatusLivro.EMPRESTADO);
-    return livroRepository.save(livro);
+    try {
+      livros.forEach(l -> {
+        if (l.getUsuarios().size() >= l.getQuantidade()) {
+          throw new RuntimeException("Livro não disponível");
+        }
+  
+        user.getLivros().add(l);
+        l.getUsuarios().add(user);
+        l.setStatus(StatusLivro.EMPRESTADO);
+      });
+    } catch (Exception e) {
+      return null;
+    }
+    return livroRepository.saveAll(livros);
   }
 
   public Livro devolucao(Long id, String userEmail) {
