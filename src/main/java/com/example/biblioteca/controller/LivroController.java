@@ -37,16 +37,6 @@ public class LivroController {
     }
   }
 
-  @PutMapping("/emprestimo")
-  public ResponseEntity<?> emprestimo(@RequestBody EmprestimoLivro emprestimoLivro) {
-    List<Livro> livros = livroService.emprestimo(emprestimoLivro);
-    if (livros != null) {
-      return ResponseEntity.ok(livros);
-    } else {
-      return ResponseEntity.status(404).body(new ErroResponse("Livros ou Usuário não encontrado", 404));
-    }
-  }
-
   // @PutMapping("/{id}/devolucao")
   // public ResponseEntity<?> devolucao(@PathVariable Long id, @RequestBody String userEmail) {
   //   Livro livro = livroService.emprestimo(id, userEmail);

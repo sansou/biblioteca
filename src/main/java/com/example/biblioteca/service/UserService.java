@@ -3,12 +3,15 @@ package com.example.biblioteca.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.biblioteca.dto.livro.EmprestimoLivro;
 import com.example.biblioteca.dto.user.CreateUserDto;
+import com.example.biblioteca.dto.user.UserDto;
+import com.example.biblioteca.enums.StatusLivro;
 import com.example.biblioteca.enums.UserRoles;
+import com.example.biblioteca.model.Livro;
 import com.example.biblioteca.model.Role;
 import com.example.biblioteca.model.User;
 import com.example.biblioteca.repository.RoleRepository;
@@ -22,6 +25,9 @@ public class UserService {
 
   @Autowired
   private RoleRepository roleRepository;
+
+  @Autowired
+  private LivroService livroService;
 
   // Método responsável por autenticar um usuário e retornar um token JWT
   // public RecoveryJwtTokenDto login(LoginUserDto loginUserDto) {
@@ -61,7 +67,7 @@ public class UserService {
     }
   }
 
-  private Role validateRole(UserRoles role) {   
+  private Role validateRole(UserRoles role) {
     Role userRole = null;
     if (roleExists(role)) {
       userRole = roleRepository.findByName(role);
@@ -81,4 +87,28 @@ public class UserService {
     }
     return opt.get();
   }
+
+  public UserDto emprestimo(EmprestimoLivro emprestimoLivro) {
+    List<Livro> livros = livroService.findByIsbns(emprestimoLivro.isbns());
+
+    User user = this.findByEmail(emprestimoLivro.email());
+    if (livros.isEmpty() || user == null) {
+      return null;
+    }
+    try {
+      livros.forEach(l -> {
+        if (l.getUsuarios().size() >= l.getQuantidade()) {
+          throw new RuntimeException("Livro não disponível");
+        }
+        user.getLivros().add(l);
+        l.getUsuarios().add(user);
+        l.setStatus(StatusLivro.EMPRESTADO);
+      });
+    } catch (Exception e) {
+      return null;
+    }
+    User userSave = userRepository.save(user);
+    return new UserDto(userSave);
+  }
+
 }

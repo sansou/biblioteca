@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.example.biblioteca.dto.livro.CreateLivroDto;
 import com.example.biblioteca.enums.StatusLivro;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,8 +15,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -59,7 +58,17 @@ public class Livro {
 
   @ManyToMany(mappedBy = "livros")
   @Builder.Default
-  @JsonManagedReference
+  @JsonBackReference
   private List<User> usuarios= new ArrayList<>();
+
+  public Livro(CreateLivroDto createLivroDto){
+    this.titulo = createLivroDto.titulo();
+    this.autor = createLivroDto.autor();
+    this.isbn = createLivroDto.isbn();
+    this.status = StatusLivro.DISPONIVEL;
+    this.categoria = (createLivroDto.categoria() != null ? createLivroDto.categoria() : "Sem categoria");
+    this.anoPublicacao = createLivroDto.anoPublicacao() != null ? createLivroDto.anoPublicacao() : new Date();
+    this.quantidade = createLivroDto.quantidade() != null ? createLivroDto.quantidade() : 1;
+  }
 
 }

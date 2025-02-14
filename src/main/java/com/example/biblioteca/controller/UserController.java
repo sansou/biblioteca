@@ -9,8 +9,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.biblioteca.dto.livro.EmprestimoLivro;
 import com.example.biblioteca.dto.user.CreateUserDto;
 import com.example.biblioteca.dto.user.GetUserDto;
+import com.example.biblioteca.dto.user.UserDto;
 import com.example.biblioteca.error.ErroResponse;
 import com.example.biblioteca.model.User;
 import com.example.biblioteca.service.UserService;
@@ -22,6 +24,17 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
+	@PostMapping("/emprestimo")
+	public ResponseEntity<?> emprestimo(@RequestBody EmprestimoLivro emprestimoLivro) {
+		UserDto user = userService.emprestimo(emprestimoLivro);
+		if (user != null) {
+			return ResponseEntity.status(HttpStatus.CREATED).body(user);
+		} else {
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+					.body(new ErroResponse("Não foi possível realizar o emprestimo", 422));
+		}
+	}
+	
 	@PostMapping()
 	public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto) {
 		User user = userService.createUser(createUserDto);
