@@ -88,6 +88,15 @@ public class UserService {
     return opt.get();
   }
 
+  public UserDto findDtoByEmail(String email) {
+    Optional<User> opt = userRepository.findByEmail(email);
+    System.out.println(opt.isPresent());
+    if (!opt.isPresent()) {
+      return null;
+    }
+    return new UserDto(opt.get());
+  }
+
   public UserDto emprestimo(EmprestimoLivro emprestimoLivro) {
     List<Livro> livros = livroService.findByIsbns(emprestimoLivro.isbns());
 

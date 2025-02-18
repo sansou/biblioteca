@@ -48,22 +48,12 @@ public class UserController {
 
 	@GetMapping()
 	public ResponseEntity<?> findByEmail(@RequestBody GetUserDto userDto) {
-		User user = userService.findByEmail(userDto.email());
+		UserDto user = userService.findDtoByEmail(userDto.email());
 		if (user != null) {
 			return ResponseEntity.ok(user);
 		} else {
 			return ResponseEntity.status(404).body(new ErroResponse("Usuário não encontrado", 404));
 		}
-	}
-
-	@GetMapping("/test/customer")
-	public ResponseEntity<String> getCustomerAuthenticationTest() {
-		return new ResponseEntity<>("Cliente autenticado com sucesso", HttpStatus.OK);
-	}
-
-	@GetMapping("/test/administrator")
-	public ResponseEntity<String> getAdminAuthenticationTest() {
-		return new ResponseEntity<>("Administrador autenticado com sucesso", HttpStatus.OK);
 	}
 
 }

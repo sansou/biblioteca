@@ -2,13 +2,10 @@ package com.example.biblioteca.service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.biblioteca.dto.livro.CreateLivroDto;
-import com.example.biblioteca.enums.StatusLivro;
 import com.example.biblioteca.model.Livro;
 import com.example.biblioteca.repository.LivroRepository;
 

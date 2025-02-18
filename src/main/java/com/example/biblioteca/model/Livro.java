@@ -39,7 +39,7 @@ public class Livro {
   @Column(nullable = false)
   private String titulo;
   
-  @Column(nullable = false)
+  @Column(nullable = false, columnDefinition = "citext")
 	private String autor;
   
   
