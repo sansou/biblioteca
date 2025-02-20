@@ -14,7 +14,6 @@ import com.example.biblioteca.dto.user.CreateUserDto;
 import com.example.biblioteca.dto.user.GetUserDto;
 import com.example.biblioteca.dto.user.UserDto;
 import com.example.biblioteca.error.ErroResponse;
-import com.example.biblioteca.model.User;
 import com.example.biblioteca.service.UserService;
 
 @RestController
@@ -26,23 +25,34 @@ public class UserController {
 
 	@PostMapping("/emprestimo")
 	public ResponseEntity<?> emprestimo(@RequestBody EmprestimoLivro emprestimoLivro) {
-		UserDto user = userService.emprestimo(emprestimoLivro);
-		if (user != null) {
+		try {
+			UserDto user = userService.emprestimo(emprestimoLivro);
 			return ResponseEntity.status(HttpStatus.CREATED).body(user);
-		} else {
+		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.body(new ErroResponse("Não foi possível realizar o emprestimo", 422));
+				.body(new ErroResponse(e.getMessage(), 422));
 		}
 	}
-	
+
+	@PostMapping("/devolucao")
+	public ResponseEntity<?> devolucao(@RequestBody EmprestimoLivro emprestimoLivro) {
+		try {
+			UserDto user = userService.devolucao(emprestimoLivro);
+			return ResponseEntity.status(HttpStatus.CREATED).body(user);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+				.body(new ErroResponse(e.getMessage(), 422));
+		}
+	}
+
 	@PostMapping()
 	public ResponseEntity<?> createUser(@RequestBody CreateUserDto createUserDto) {
-		User user = userService.createUser(createUserDto);
-		if (user != null) {
+		try {
+			UserDto user = userService.createUser(createUserDto);
 			return ResponseEntity.status(HttpStatus.CREATED).body(user);
-		} else {
+		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-					.body(new ErroResponse("Usuário já cadastrado", 422));
+			.body(new ErroResponse(e.getMessage(), 422));
 		}
 	}
 

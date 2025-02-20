@@ -3,6 +3,7 @@ package com.example.biblioteca.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,20 +30,8 @@ public class UserService {
   @Autowired
   private LivroService livroService;
 
-  // Método responsável por autenticar um usuário e retornar um token JWT
-  // public RecoveryJwtTokenDto login(LoginUserDto loginUserDto) {
-  // // Cria um objeto de autenticação com o email e a senha do usuário
-  // UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new
-  // UsernamePasswordAuthenticationToken(
-  // loginUserDto.email(), loginUserDto.password());
-
-  // // Autentica o usuário com as credenciais fornecidas
-  // Authentication authentication =
-  // authenticationManager.authenticate(usernamePasswordAuthenticationToken);
-  // }
-
   // Método responsável por criar um usuário
-  public User createUser(CreateUserDto createUserDto) {
+  public UserDto createUser(CreateUserDto createUserDto) {
     // Verifica se a permissão fornecida existe
     Role role = validateRole(createUserDto.role());
 
@@ -56,15 +45,12 @@ public class UserService {
 
     // Salva o novo usuário no banco de dados
 
-    try {
-      userRepository.findByEmail(createUserDto.email()).ifPresent(user -> {
-        throw new RuntimeException();
-      });
-      return userRepository.save(newUser);
+    userRepository.findByEmail(createUserDto.email()).ifPresent(user -> {
+      throw new ServiceException("Usuário já cadastrado");
+    });
+    User userSave = userRepository.save(newUser);
+    return new UserDto(userSave);
 
-    } catch (Exception e) {
-      return null;
-    }
   }
 
   private Role validateRole(UserRoles role) {
@@ -83,39 +69,43 @@ public class UserService {
     Optional<User> opt = userRepository.findByEmail(email);
     System.out.println(opt.isPresent());
     if (!opt.isPresent()) {
-      return null;
+      throw new ServiceException("Usuário não encontrado");
     }
     return opt.get();
   }
 
   public UserDto findDtoByEmail(String email) {
-    Optional<User> opt = userRepository.findByEmail(email);
-    System.out.println(opt.isPresent());
-    if (!opt.isPresent()) {
-      return null;
-    }
-    return new UserDto(opt.get());
+    return new UserDto(findByEmail(email));
   }
 
   public UserDto emprestimo(EmprestimoLivro emprestimoLivro) {
     List<Livro> livros = livroService.findByIsbns(emprestimoLivro.isbns());
-
     User user = this.findByEmail(emprestimoLivro.email());
-    if (livros.isEmpty() || user == null) {
-      return null;
-    }
-    try {
-      livros.forEach(l -> {
-        if (l.getUsuarios().size() >= l.getQuantidade()) {
-          throw new RuntimeException("Livro não disponível");
-        }
-        user.getLivros().add(l);
-        l.getUsuarios().add(user);
-        l.setStatus(StatusLivro.EMPRESTADO);
-      });
-    } catch (Exception e) {
-      return null;
-    }
+
+    livros.forEach(l -> {
+      if (l.getUsuarios().size() >= l.getQuantidade()) {
+        throw new ServiceException("Livro " + l.getTitulo() + " não disponível para emprestimo");
+      }
+      user.getLivros().add(l);
+      l.getUsuarios().add(user);
+    });
+
+    User userSave = userRepository.save(user);
+    return new UserDto(userSave);
+  }
+
+  public UserDto devolucao(EmprestimoLivro emprestimoLivro) {
+    List<Livro> livros = livroService.findByIsbns(emprestimoLivro.isbns());
+    User user = this.findByEmail(emprestimoLivro.email());
+
+    livros.forEach(l -> {
+      if(l.getUsuarios().size() == 0){
+        throw new ServiceException("Livro " + l.getTitulo() + " não foi emprestado");
+      }
+      user.getLivros().remove(l);
+      l.getUsuarios().remove(user);
+    });
+
     User userSave = userRepository.save(user);
     return new UserDto(userSave);
   }
